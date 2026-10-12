@@ -1,0 +1,168 @@
+@import "tailwindcss";
+
+@theme {
+  --color-ink: #0b1a30;
+  --color-ink-deep: #060f1d;
+  --color-ink-2: #2c4568;
+  --color-ink-3: #6b819f;
+  --color-gold: #c2a26b;
+  --color-gold-soft: #f0e7d5;
+  --color-sand: #dfcdaa;
+  --color-paper: #faf8f4;
+  --color-line: #e7e2d8;
+  --color-muted: #7d7767;
+
+  --font-sans: var(--font-inter), var(--font-sc), system-ui, sans-serif;
+  --font-display: var(--font-jost), var(--font-sc), system-ui, sans-serif;
+  --font-mono: var(--font-mono-face), ui-monospace, Menlo, monospace;
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out-quart: cubic-bezier(0.76, 0, 0.24, 1);
+}
+
+:root {
+  --gutter: clamp(20px, 4vw, 64px);
+  --hair: color-mix(in srgb, var(--color-paper) 12%, transparent);
+  --hair-ink: color-mix(in srgb, var(--color-ink) 12%, transparent);
+}
+
+html {
+  background: var(--color-ink-deep);
+  color: var(--color-paper);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+body {
+  font-family: var(--font-sans);
+  font-feature-settings: "ss01", "cv11";
+  overflow-x: clip;
+}
+
+::selection {
+  background: var(--color-gold);
+  color: var(--color-ink);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  html.has-cursor,
+  html.has-cursor * {
+    cursor: none !important;
+  }
+}
+
+.intro-seen .preloader {
+  display: none;
+}
+
+.wrap {
+  width: 100%;
+  max-width: 1440px;
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.display {
+  font-family: var(--font-display);
+  font-weight: 455;
+  letter-spacing: 0;
+}
+
+.h-hero {
+  font-size: clamp(52px, 9.2vw, 156px);
+  line-height: 1.02;
+  letter-spacing: -0.035em;
+  font-weight: 500;
+}
+
+.h-section {
+  font-size: clamp(34px, 4.6vw, 72px);
+  line-height: 1.12;
+  letter-spacing: -0.03em;
+  font-weight: 500;
+}
+
+.text-balance {
+  text-wrap: balance;
+}
+.text-pretty {
+  text-wrap: pretty;
+}
+
+/* Film grain: a fixed SVG turbulence tile, so it costs one paint, not one per frame. */
+.grain {
+  position: fixed;
+  inset: -50%;
+  z-index: 60;
+  pointer-events: none;
+  opacity: 0.06;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.9 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  animation: grain 1.2s steps(6) infinite;
+}
+@keyframes grain {
+  0% { transform: translate(0, 0); }
+  20% { transform: translate(-3%, 2%); }
+  40% { transform: translate(2%, -4%); }
+  60% { transform: translate(-4%, -1%); }
+  80% { transform: translate(3%, 3%); }
+  100% { transform: translate(0, 0); }
+}
+
+.hairline-grid {
+  background-image:
+    linear-gradient(to right, var(--hair) 1px, transparent 1px);
+  background-size: calc((100% - 2 * var(--gutter)) / 12) 100%;
+  background-position: var(--gutter) 0;
+}
+
+@keyframes marquee {
+  from { transform: translate3d(0, 0, 0); }
+  to { transform: translate3d(-50%, 0, 0); }
+}
+.marquee {
+  animation: marquee 60s linear infinite;
+}
+
+@keyframes blink {
+  50% { opacity: 0; }
+}
+.caret {
+  animation: blink 1s steps(1) infinite;
+}
+
+@keyframes dash {
+  to { stroke-dashoffset: -40; }
+}
+.flow-dash {
+  stroke-dasharray: 2 6;
+  animation: dash 1.6s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
