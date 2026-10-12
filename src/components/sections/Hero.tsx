@@ -86,6 +86,7 @@ export function Hero() {
                       transition={{ delay: 1.1, duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
                     />
                   </span>
+                  {hero.titleEnd}
                 </>,
               ]}
             />

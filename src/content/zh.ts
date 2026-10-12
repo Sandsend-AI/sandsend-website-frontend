@@ -11,7 +11,7 @@ export const zh = {
   meta: {
     title: "沙尘彼岸 Sandsend · 企业 AI 工程",
     template: "%s · 沙尘彼岸 Sandsend",
-    ogTitle: "沙尘彼岸 Sandsend · 让 AI 抵达业务的彼岸",
+    ogTitle: "沙尘彼岸 Sandsend · 沙尽之处，AI 抵岸。",
     description:
       "沙尘彼岸 Sandsend 是一家企业 AI 工程公司：以前线部署工程推动企业 AI 化转型，以轻量化架构构建 AI Agent 系统，并为企业私有化部署、微调模型与组织训练数据。",
     keywords: ["企业 AI", "AI 转型", "前线部署工程", "FDE", "AI Agent", "智能体", "私有化部署", "模型微调", "训练数据", "Sandsend", "沙尘彼岸"],
@@ -37,8 +37,9 @@ export const zh = {
 
   hero: {
     eyebrow: "Enterprise AI · Forward Deployed",
-    titleLines: ["让 AI 抵达", "业务的"],
-    titleAccent: "彼岸",
+    titleLines: ["沙尽之处，", "AI "],
+    titleAccent: "抵岸",
+    titleEnd: "。",
     lede: "我们派驻工程师进入企业现场，把分散的数据、流程与模型，连接成真正参与判断与执行的 AI 系统——从一个值钱的业务问题开始，在真实数据上交付，并对结果负责。",
     secondary: "三大业务",
     stats: [

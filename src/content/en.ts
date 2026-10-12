@@ -9,7 +9,7 @@ export const en: Content = {
   meta: {
     title: "Sandsend · Enterprise AI Engineering",
     template: "%s · Sandsend",
-    ogTitle: "Sandsend · Carry AI to the far shore",
+    ogTitle: "Sandsend · Where the sands end, AI lands.",
     description:
       "Sandsend is an enterprise AI engineering company. We drive AI transformation through forward deployed engineering, build AI agent systems on a lightweight architecture, and deploy, fine-tune and curate training data for private enterprise models.",
     keywords: ["enterprise AI", "AI transformation", "forward deployed engineering", "FDE", "AI agents", "private deployment", "fine-tuning", "training data", "Sandsend"],
@@ -35,8 +35,9 @@ export const en: Content = {
 
   hero: {
     eyebrow: "Enterprise AI · Forward Deployed",
-    titleLines: ["Carry AI to", "the "],
-    titleAccent: "far shore",
+    titleLines: ["Where the sands end,", "AI "],
+    titleAccent: "lands",
+    titleEnd: ".",
     lede: "We embed engineers inside your enterprise and connect scattered data, processes and models into AI systems that genuinely take part in judgment and execution — starting from one business problem worth solving, delivered on real data, and accountable for the outcome.",
     secondary: "Three practices",
     stats: [
