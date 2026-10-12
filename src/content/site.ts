@@ -2,7 +2,7 @@ export const site = {
   name: "沙尘彼岸",
   nameEn: "Sandsend",
   url: "https://sandsend.ai",
-  email: "hello@sandsend.ai",
+  email: "haven@sandsend.ai",
   icp: "",
 };
 

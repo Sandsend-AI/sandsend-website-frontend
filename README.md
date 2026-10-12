@@ -26,7 +26,7 @@ Node ≥ 20.9。构建时 `next/font` 会从 Google Fonts 下载并自托管字�
 
 - `src/content/zh.ts` / `src/content/en.ts`：中英文全部页面文案，两份结构必须一致（`en.ts` 以 `zh.ts` 的类型为准，漏字段会编译报错）。字段 `alt` 是另一种语言的装饰性副标签：中文版显示英文，英文版显示中文。
 - `src/content/site.ts`：与语言无关的公司信息
-  - `site.email`：联系邮箱（目前是占位值 `hello@sandsend.ai`，上线前请替换）
+  - `site.email`：联系邮箱 `haven@sandsend.ai`
   - `site.url`：正式域名，用于 SEO 元数据
   - `site.icp`：ICP 备案号，填写后页脚自动显示并链接到工信部
 
