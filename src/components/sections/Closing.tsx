@@ -1,11 +1,15 @@
+"use client";
+
 import { CtaButton } from "@/components/fx/Magnetic";
 import { LineReveal, Reveal } from "@/components/fx/Reveal";
 import { SandParticles } from "@/components/fx/SandParticles";
-import { closing, site } from "@/content/site";
+import { useContent } from "@/content/ContentProvider";
+import { site } from "@/content/site";
 
 export function Closing() {
-  const subject = encodeURIComponent("预约场景诊断");
-  const body = encodeURIComponent("公司：\n行业：\n联系人 / 职位：\n希望讨论的业务问题：\n");
+  const { closing } = useContent();
+  const subject = encodeURIComponent(closing.mailSubject);
+  const body = encodeURIComponent(closing.mailBody);
   const mailto = `mailto:${site.email}?subject=${subject}&body=${body}`;
 
   return (
@@ -13,23 +17,30 @@ export function Closing() {
       <div className="absolute inset-0">
         <SandParticles />
       </div>
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(70%_70%_at_15%_60%,rgba(6,15,29,.9),transparent_70%)]" />
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(70%_70%_at_15%_60%,rgba(6,15,29,.9),transparent_70%)] max-md:bg-[linear-gradient(to_bottom,transparent_30%,rgba(6,15,29,.85)_60%)]" />
 
-      <div className="wrap relative flex min-h-[100svh] flex-col justify-end pb-20 pt-[52vh] md:justify-center md:py-32">
-        <div className="max-w-2xl">
+      <div className="wrap relative flex min-h-[100svh] flex-col justify-end pb-16 pt-[min(52vh,440px)] md:justify-center md:py-32">
+        <div className="max-w-2xl en:max-w-3xl">
           <Reveal>
             <div className="label flex items-center gap-3 text-paper/50">
               <span className="h-px w-8 bg-gold" />
               {closing.label}
             </div>
           </Reveal>
-          <h2 className="mt-8 text-[clamp(36px,5vw,80px)] font-medium leading-[1.12] tracking-[-0.035em]">
-            <LineReveal lines={["你的公司，", "每天最贵的三个", <span key="g" className="text-gold">错误决策是什么？</span>]} />
+          <h2 className="mt-6 text-[clamp(34px,5vw,80px)] font-medium leading-[1.12] tracking-[-0.035em] md:mt-8 en:text-[clamp(32px,4.2vw,64px)] en:leading-[1.08]">
+            <LineReveal
+              lines={[
+                ...closing.questionLines,
+                <span key="accent" className="text-gold">
+                  {closing.questionAccent}
+                </span>,
+              ]}
+            />
           </h2>
           <Reveal delay={0.2}>
-            <p className="mt-8 max-w-lg text-[15px] leading-[1.9] text-paper/60 md:text-base">{closing.lede}</p>
+            <p className="mt-6 max-w-lg text-[15px] leading-[1.9] text-paper/60 md:mt-8 md:text-base">{closing.lede}</p>
           </Reveal>
-          <Reveal delay={0.3} className="mt-10 flex flex-wrap items-center gap-6">
+          <Reveal delay={0.3} className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-5 md:mt-10">
             <CtaButton href={mailto} cursor="Write">
               {closing.cta}
             </CtaButton>

@@ -6,7 +6,7 @@ import { DuneField } from "@/components/fx/DuneField";
 import { useIntroDone } from "@/components/fx/intro";
 import { CtaButton } from "@/components/fx/Magnetic";
 import { LineReveal, Scramble } from "@/components/fx/Reveal";
-import { hero } from "@/content/site";
+import { useContent } from "@/content/ContentProvider";
 
 function Clock() {
   const [t, setT] = useState("--:--:--");
@@ -29,6 +29,7 @@ function Clock() {
 }
 
 export function Hero() {
+  const { hero, ui } = useContent();
   const ref = useRef<HTMLElement>(null);
   const ready = useIntroDone();
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
@@ -37,7 +38,7 @@ export function Hero() {
   const scale = useTransform(scrollYProgress, [0, 1], [1, 1.12]);
 
   return (
-    <section ref={ref} id="top" className="relative h-[100svh] min-h-[680px] overflow-hidden bg-ink-deep">
+    <section ref={ref} id="top" className="relative min-h-[100svh] overflow-hidden bg-ink-deep md:h-[100svh] md:min-h-[680px]">
       <motion.div className="absolute inset-0" style={{ scale }} data-cursor-hide>
         <DuneField />
       </motion.div>
@@ -45,7 +46,7 @@ export function Hero() {
       <div className="pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-ink-deep to-transparent" />
       <div className="hairline-grid pointer-events-none absolute inset-0 opacity-40" />
 
-      <motion.div style={{ opacity: fade }} className="wrap relative z-10 flex h-full flex-col pb-8 pt-28 md:pt-32">
+      <motion.div style={{ opacity: fade }} className="wrap relative z-10 flex min-h-[100svh] flex-col pb-8 pt-24 md:h-full md:min-h-0 md:pt-32">
         <div className="label flex items-start justify-between text-paper/45">
           <div className="space-y-1.5">
             <div>
@@ -66,7 +67,7 @@ export function Hero() {
           </div>
         </div>
 
-        <div className="mt-auto grid grid-cols-12 items-end gap-y-10">
+        <div className="mt-auto grid grid-cols-12 items-end gap-y-8 pt-12 md:gap-y-10">
           <motion.h1 style={{ y: yTitle }} className="h-hero col-span-12 lg:col-span-8">
             <LineReveal
               play={ready}
@@ -75,9 +76,9 @@ export function Hero() {
               lines={[
                 hero.titleLines[0],
                 <>
-                  业务的
+                  {hero.titleLines[1]}
                   <span className="relative inline-block text-gold">
-                    彼岸
+                    {hero.titleAccent}
                     <motion.span
                       className="absolute -bottom-[0.06em] left-0 h-[0.045em] w-full origin-left bg-gold"
                       initial={{ scaleX: 0 }}
@@ -97,12 +98,12 @@ export function Hero() {
             transition={{ delay: 0.55, duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
           >
             <p className="text-pretty max-w-md text-[15px] leading-[1.9] text-paper/70 md:text-base">{hero.lede}</p>
-            <div className="mt-8 flex flex-wrap items-center gap-4">
+            <div className="mt-7 flex flex-wrap items-center gap-4 md:mt-8">
               <CtaButton href="#contact" cursor="Begin">
-                预约场景诊断
+                {ui.cta}
               </CtaButton>
               <a href="#practices" className="group label flex items-center gap-3 px-2 text-paper/60 transition-colors hover:text-paper">
-                三大业务
+                {hero.secondary}
                 <span className="h-px w-8 bg-paper/40 transition-all duration-500 group-hover:w-12 group-hover:bg-gold" />
               </a>
             </div>
@@ -110,18 +111,18 @@ export function Hero() {
         </div>
 
         <motion.div
-          className="mt-12 grid grid-cols-3 border-t border-paper/10 pt-5 md:mt-16"
+          className="mt-10 grid grid-cols-3 border-t border-paper/10 pt-5 md:mt-16"
           initial={{ opacity: 0 }}
           animate={ready ? { opacity: 1 } : undefined}
           transition={{ delay: 0.9, duration: 1.4 }}
         >
           {hero.stats.map((s, i) => (
-            <div key={s.label} className={`pr-4 ${i > 0 ? "border-l border-paper/10 pl-4 md:pl-8" : ""}`}>
-              <div className="display flex items-baseline gap-1 text-3xl text-paper md:text-5xl">
+            <div key={s.label} className={`pr-3 md:pr-4 ${i > 0 ? "border-l border-paper/10 pl-3 md:pl-8" : ""}`}>
+              <div className="display flex items-baseline gap-1 text-[28px] text-paper md:text-5xl">
                 {s.value}
-                <span className="text-base text-gold md:text-xl">{s.unit}</span>
+                <span className="text-sm text-gold md:text-xl">{s.unit}</span>
               </div>
-              <div className="mt-2 text-[12px] leading-relaxed text-paper/50 md:text-[13px]">{s.label}</div>
+              <div className="mt-2 text-[11.5px] leading-relaxed text-paper/50 md:text-[13px]">{s.label}</div>
             </div>
           ))}
         </motion.div>

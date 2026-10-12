@@ -3,9 +3,10 @@
 import { motion, useScroll, useTransform } from "motion/react";
 import { useRef } from "react";
 import { Reveal } from "@/components/fx/Reveal";
-import { engagement } from "@/content/site";
+import { useContent } from "@/content/ContentProvider";
 
 export function Engagement() {
+  const { engagement } = useContent();
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start 0.8", "end 0.6"] });
   const line = useTransform(scrollYProgress, [0, 1], [0, 1]);
@@ -30,20 +31,20 @@ export function Engagement() {
           </Reveal>
         </div>
 
-        <div ref={ref} className="relative mt-20 md:mt-28">
-          <div className="absolute left-0 right-0 top-[7px] hidden h-px bg-ink/10 md:block" />
-          <motion.div className="absolute left-0 right-0 top-[7px] hidden h-px origin-left bg-gold md:block" style={{ scaleX: line }} />
-          <div className="grid grid-cols-1 gap-14 md:grid-cols-3 md:gap-10">
+        <div ref={ref} className="relative mt-16 md:mt-28">
+          <div className="absolute left-0 right-0 top-[7px] hidden h-px bg-ink/10 lg:block" />
+          <motion.div className="absolute left-0 right-0 top-[7px] hidden h-px origin-left bg-gold lg:block" style={{ scaleX: line }} />
+          <div className="grid grid-cols-1 gap-12 md:gap-16 lg:grid-cols-3 lg:gap-10">
             {engagement.phases.map((p, i) => (
               <Reveal key={p.k} delay={i * 0.12} className="relative">
                 <div className="flex items-center gap-4">
                   <span className="relative flex h-[15px] w-[15px] items-center justify-center rounded-full border border-gold bg-paper">
                     <span className="h-[5px] w-[5px] rounded-full bg-gold" />
                   </span>
-                  <span className="label relative -ml-2 bg-paper px-2 text-muted">{p.en}</span>
+                  <span className="label relative -ml-2 bg-paper px-2 text-muted">{p.alt}</span>
                 </div>
-                <div className="mt-10 flex items-baseline justify-between border-b border-ink/10 pb-6">
-                  <h3 className="text-[34px] font-medium tracking-tight md:text-[40px]">{p.name}</h3>
+                <div className="mt-8 flex items-baseline justify-between gap-4 border-b border-ink/10 pb-6 md:mt-10">
+                  <h3 className="text-[32px] font-medium tracking-tight md:text-[40px] en:lg:text-[clamp(30px,2.8vw,40px)]">{p.name}</h3>
                   <span className="display text-[64px] leading-none text-ink/[0.07] md:text-[88px]">{p.k}</span>
                 </div>
                 <div className="mt-6 flex items-center gap-3">

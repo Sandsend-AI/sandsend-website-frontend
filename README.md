@@ -16,13 +16,19 @@ Node ≥ 20.9。构建时 `next/font` 会从 Google Fonts 下载并自托管字�
 
 在 Vercel 导入本仓库即可，框架自动识别为 Next.js，无需额外配置。
 
+## 多语言
+
+中文版在 `/`，英文版在 `/en`。两个语言各自是一个根布局（`src/app/(zh)/layout.tsx`、`src/app/(en)/en/layout.tsx`），共用 `components/layout/Document.tsx` 与 `components/HomePage.tsx`，全站仍是静态预渲染。页头和页脚都有语言切换入口，`<head>` 里已输出 `hreflang` 与 canonical。
+
+英文字号比中文小一档（同字号下拉丁文本约宽一倍）：全局标题在 `globals.css` 的 `.h-hero:lang(en)` / `.h-section:lang(en)`，组件内用 Tailwind 自定义变体 `en:`（例如 `en:text-[...]`）。
+
 ## 改文案
 
-全站文案集中在 `src/content/site.ts`，包括：
-
-- `site.email`：联系邮箱（目前是占位值 `hello@sandsend.ai`，上线前请替换）
-- `site.url`：正式域名，用于 SEO 元数据
-- `site.icp`：ICP 备案号，填写后页脚自动显示并链接到工信部
+- `src/content/zh.ts` / `src/content/en.ts`：中英文全部页面文案，两份结构必须一致（`en.ts` 以 `zh.ts` 的类型为准，漏字段会编译报错）。字段 `alt` 是另一种语言的装饰性副标签：中文版显示英文，英文版显示中文。
+- `src/content/site.ts`：与语言无关的公司信息
+  - `site.email`：联系邮箱（目前是占位值 `hello@sandsend.ai`，上线前请替换）
+  - `site.url`：正式域名，用于 SEO 元数据
+  - `site.icp`：ICP 备案号，填写后页脚自动显示并链接到工信部
 
 ## 品牌一致性
 

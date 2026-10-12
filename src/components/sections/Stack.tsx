@@ -4,9 +4,10 @@ import { motion, useMotionValue, useScroll, useTransform, type MotionValue } fro
 import { useEffect, useRef, useState } from "react";
 import { DunePattern } from "@/components/brand/DunePattern";
 import { Reveal } from "@/components/fx/Reveal";
-import { practices, stack } from "@/content/site";
+import { useContent } from "@/content/ContentProvider";
 
 export function Stack() {
+  const { practices, stack } = useContent();
   const ref = useRef<HTMLElement>(null);
   const [practice, setPractice] = useState<string | null>(null);
   const [hover, setHover] = useState<number | null>(null);
@@ -83,7 +84,7 @@ export function Stack() {
                   <div>
                     <div className="flex items-baseline gap-3">
                       <span className="text-[17px] font-medium">{l.name}</span>
-                      <span className="label text-[10px] text-paper/40">{l.en}</span>
+                      <span className="label text-[10px] text-paper/40">{l.alt}</span>
                     </div>
                     <p className="mt-1.5 text-[13.5px] leading-relaxed text-paper/55">{l.d}</p>
                   </div>
@@ -102,7 +103,7 @@ export function Stack() {
               {stack.layers.map((l, i) => {
                 const on = lit.has(i);
                 return (
-                  <Plate key={l.code} i={i} gap={gap} on={on} dim={anyLit && !on} code={l.code} en={l.en} name={l.name} onHover={setHover} />
+                  <Plate key={l.code} i={i} gap={gap} on={on} dim={anyLit && !on} code={l.code} alt={l.alt} name={l.name} onHover={setHover} />
                 );
               })}
             </motion.div>
@@ -120,7 +121,7 @@ function Plate({
   on,
   dim,
   code,
-  en,
+  alt,
   name,
   onHover,
 }: {
@@ -129,7 +130,7 @@ function Plate({
   on: boolean;
   dim: boolean;
   code: string;
-  en: string;
+  alt: string;
   name: string;
   onHover: (i: number | null) => void;
 }) {
@@ -157,10 +158,10 @@ function Plate({
           backdropFilter: "blur(2px)",
         }}
       />
-      <div className={`absolute left-3 top-3 font-mono text-[11px] tracking-[0.2em] transition-colors duration-500 ${on ? "text-gold" : "text-paper/50"}`}>
-        {code} · {en.toUpperCase()}
+      <div className={`absolute left-3 top-3 font-mono text-[10px] tracking-[0.2em] transition-colors duration-500 md:text-[11px] ${on ? "text-gold" : "text-paper/50"}`}>
+        {code} · {alt.toUpperCase()}
       </div>
-      <div className={`absolute bottom-3 right-4 text-[22px] font-medium transition-colors duration-500 ${on ? "text-paper" : "text-paper/40"}`}>
+      <div className={`absolute bottom-3 right-4 text-[18px] font-medium transition-colors duration-500 md:text-[22px] ${on ? "text-paper" : "text-paper/40"}`}>
         {name}
       </div>
       <span

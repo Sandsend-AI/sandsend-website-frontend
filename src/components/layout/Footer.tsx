@@ -1,29 +1,31 @@
+"use client";
+
 import { LATIN } from "@/components/brand/paths";
 import { Mark } from "@/components/brand/Logo";
-import { nav, practices, site } from "@/content/site";
+import { useContent } from "@/content/ContentProvider";
+import { site } from "@/content/site";
 
 export function Footer() {
+  const t = useContent();
   const year = new Date().getFullYear();
   return (
-    <footer className="relative overflow-hidden border-t border-paper/10 bg-ink-deep pt-20">
+    <footer className="relative overflow-hidden border-t border-paper/10 bg-ink-deep pt-16 md:pt-20">
       <div className="wrap">
-        <div className="grid grid-cols-2 gap-y-12 md:grid-cols-12">
+        <div className="grid grid-cols-2 gap-x-6 gap-y-12 md:grid-cols-12">
           <div className="col-span-2 md:col-span-5">
             <div className="flex items-center gap-4">
               <Mark className="h-10 w-10" />
               <div>
-                <div className="text-lg font-medium">{site.name}</div>
-                <div className="label text-[10px] text-paper/40">{site.nameEn}</div>
+                <div className="text-lg font-medium">{t.brand.name}</div>
+                <div className="label text-[10px] text-paper/40">{t.brand.alt}</div>
               </div>
             </div>
-            <p className="mt-6 max-w-sm text-[14px] leading-[1.9] text-paper/50">
-              企业 AI 工程公司。前线部署工程、智能体系统与模型工程，从一个值钱的业务问题开始。
-            </p>
+            <p className="mt-6 max-w-sm text-[14px] leading-[1.9] text-paper/50">{t.footer.blurb}</p>
           </div>
           <div className="md:col-span-2 md:col-start-7">
-            <div className="label mb-5 text-[10px] text-paper/35">业务</div>
+            <div className="label mb-5 text-[10px] text-paper/35">{t.footer.practices}</div>
             <ul className="space-y-3 text-[14px] text-paper/70">
-              {practices.map((p) => (
+              {t.practices.map((p) => (
                 <li key={p.id}>
                   <a href="#practices" className="transition-colors hover:text-gold">
                     {p.name}
@@ -33,9 +35,9 @@ export function Footer() {
             </ul>
           </div>
           <div className="md:col-span-2">
-            <div className="label mb-5 text-[10px] text-paper/35">导航</div>
+            <div className="label mb-5 text-[10px] text-paper/35">{t.footer.nav}</div>
             <ul className="space-y-3 text-[14px] text-paper/70">
-              {nav.map((n) => (
+              {t.nav.map((n) => (
                 <li key={n.href}>
                   <a href={n.href} className="transition-colors hover:text-gold">
                     {n.label}
@@ -45,22 +47,25 @@ export function Footer() {
             </ul>
           </div>
           <div className="col-span-2 md:col-span-2">
-            <div className="label mb-5 text-[10px] text-paper/35">联系</div>
-            <a href={`mailto:${site.email}`} className="font-mono text-[13px] text-paper/70 transition-colors hover:text-gold">
+            <div className="label mb-5 text-[10px] text-paper/35">{t.footer.contact}</div>
+            <a href={`mailto:${site.email}`} className="break-all font-mono text-[13px] text-paper/70 transition-colors hover:text-gold">
               {site.email}
+            </a>
+            <a href={t.ui.lang.href} hrefLang={t.ui.lang.hrefLang} className="label mt-4 block text-[10px] text-paper/40 transition-colors hover:text-gold">
+              {t.ui.lang.aria} →
             </a>
           </div>
         </div>
 
-        <svg viewBox="2 -71 500 75" className="mt-24 w-full" aria-hidden="true">
+        <svg viewBox="2 -71 500 75" className="mt-16 w-full md:mt-24" aria-hidden="true">
           <path fill="#FAF8F4" d={LATIN.d} />
         </svg>
 
         <div className="mt-10 flex flex-col gap-3 border-t border-paper/10 py-8 text-[12px] text-paper/40 md:flex-row md:items-center md:justify-between">
           <span>
-            © {year} {site.name} {site.nameEn} · {site.group} 旗下运营公司
+            © {year} {t.footer.legal}
           </span>
-          <span className="flex gap-6">
+          <span className="flex flex-wrap gap-x-6 gap-y-2">
             {site.icp && (
               <a href="https://beian.miit.gov.cn/" target="_blank" rel="noreferrer" className="hover:text-paper/70">
                 {site.icp}

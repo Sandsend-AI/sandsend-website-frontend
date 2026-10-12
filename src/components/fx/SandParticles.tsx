@@ -49,9 +49,11 @@ export function SandParticles({ className }: { className?: string }) {
       canvas.height = H * dpr;
 
       const mobile = W < 768;
-      const D = mobile ? Math.min(W * 0.78, H * 0.42) : Math.min(H * 0.66, W * 0.4);
+      // Matches the top padding Closing reserves above its copy on small screens.
+      const room = Math.min(innerHeight * 0.52, 440);
+      const D = mobile ? Math.min(W * 0.72, room * 0.78) : Math.min(H * 0.66, W * 0.4);
       const cx = mobile ? W * 0.5 : W * 0.72;
-      const cy = mobile ? H * 0.3 : H * 0.5;
+      const cy = mobile ? room * 0.52 : H * 0.5;
       const target = mobile ? 2200 : 5400;
 
       const off = document.createElement("canvas");
@@ -126,7 +128,10 @@ export function SandParticles({ className }: { className?: string }) {
     const onLeave = () => {
       mouse.x = mouse.y = -9999;
     };
+    const onUp = (e: PointerEvent) => e.pointerType !== "mouse" && onLeave();
     addEventListener("pointermove", onMove, { passive: true });
+    addEventListener("pointerup", onUp, { passive: true });
+    addEventListener("pointercancel", onUp, { passive: true });
     document.addEventListener("pointerleave", onLeave);
 
     let visible = false;
@@ -197,6 +202,8 @@ export function SandParticles({ className }: { className?: string }) {
       io.disconnect();
       clearTimeout(rt);
       removeEventListener("pointermove", onMove);
+      removeEventListener("pointerup", onUp);
+      removeEventListener("pointercancel", onUp);
       document.removeEventListener("pointerleave", onLeave);
     };
   }, []);

@@ -1,5 +1,7 @@
+"use client";
+
 import { Reveal } from "@/components/fx/Reveal";
-import { trust } from "@/content/site";
+import { useContent } from "@/content/ContentProvider";
 
 const GLYPHS = [
   // private deployment: a sealed perimeter
@@ -36,6 +38,7 @@ const GLYPHS = [
 ];
 
 export function Trust() {
+  const { trust } = useContent();
   return (
     <section id="trust" data-theme="light" className="relative bg-paper pb-28 text-ink md:pb-40">
       <div className="wrap">
@@ -51,7 +54,7 @@ export function Trust() {
             </div>
             <div className="col-span-12 lg:col-span-8">
               <Reveal delay={0.06}>
-                <h2 className="h-section whitespace-pre-line !text-[clamp(32px,3.8vw,60px)]">{trust.title}</h2>
+                <h2 className="h-section text-balance whitespace-pre-line !text-[clamp(28px,3.8vw,60px)] en:!text-[clamp(28px,3.2vw,48px)]">{trust.title}</h2>
               </Reveal>
               <Reveal delay={0.12}>
                 <p className="mt-6 text-[15px] leading-[1.9] text-ink/60">{trust.lede}</p>
@@ -64,7 +67,7 @@ export function Trust() {
               <Reveal
                 key={it.k}
                 delay={(i % 3) * 0.08}
-                className="group relative overflow-hidden border-b border-r border-ink/10 p-8 md:p-10"
+                className="group relative overflow-hidden border-b border-r border-ink/10 p-7 md:p-10"
               >
                 <span className="absolute inset-0 origin-bottom scale-y-0 bg-ink transition-transform duration-700 ease-[var(--ease-out-expo)] group-hover:scale-y-100" />
                 <div className="relative">
@@ -80,7 +83,7 @@ export function Trust() {
                       {String(i + 1).padStart(2, "0")}
                     </span>
                   </div>
-                  <h3 className="mt-10 text-2xl font-medium tracking-tight transition-colors duration-500 group-hover:text-paper">{it.k}</h3>
+                  <h3 className="mt-8 text-2xl font-medium md:mt-10 tracking-tight transition-colors duration-500 group-hover:text-paper">{it.k}</h3>
                   <p className="mt-3 text-[14.5px] leading-[1.85] text-ink/60 transition-colors duration-500 group-hover:text-paper/60">{it.d}</p>
                 </div>
               </Reveal>

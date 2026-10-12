@@ -3,7 +3,7 @@
 import { useInView } from "motion/react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Counter, Reveal } from "@/components/fx/Reveal";
-import { control } from "@/content/site";
+import { useContent } from "@/content/ContentProvider";
 
 const TAG_STYLE: Record<string, string> = {
   DETECT: "text-[#E0B872]",
@@ -112,6 +112,7 @@ function SupplierGrid({ on }: { on: boolean }) {
 }
 
 export function ControlCenter() {
+  const { control } = useContent();
   const ref = useRef<HTMLDivElement>(null);
   const on = useInView(ref, { once: false, margin: "-20% 0px -20% 0px" });
   const seen = useInView(ref, { once: true, margin: "-20% 0px" });
@@ -128,7 +129,7 @@ export function ControlCenter() {
             </div>
           </Reveal>
           <Reveal delay={0.08}>
-            <h2 className="h-section text-balance mt-8 !text-[clamp(32px,3.6vw,56px)]">{control.title}</h2>
+            <h2 className="h-section text-balance mt-8 !text-[clamp(30px,3.6vw,56px)] en:!text-[clamp(28px,2.8vw,44px)]">{control.title}</h2>
           </Reveal>
           <Reveal delay={0.14}>
             <p className="mt-6 text-[15px] leading-[1.9] text-paper/60">{control.lede}</p>
@@ -164,9 +165,9 @@ export function ControlCenter() {
 
             <div className="grid grid-cols-2 border-b border-paper/10 md:grid-cols-4">
               {control.metrics.map((m, i) => (
-                <div key={m.label} className={`px-5 py-5 ${i % 2 ? "border-l" : ""} ${i >= 2 ? "border-t md:border-t-0" : ""} border-paper/10 md:border-l md:first:border-l-0`}>
-                  <div className="text-[12px] text-paper/45">{m.label}</div>
-                  <div className={`display mt-2 text-4xl ${i === 3 ? "text-gold" : "text-paper"}`}>
+                <div key={m.label} className={`px-4 py-4 md:px-5 md:py-5 ${i % 2 ? "border-l" : ""} ${i >= 2 ? "border-t md:border-t-0" : ""} border-paper/10 md:border-l md:first:border-l-0`}>
+                  <div className="text-[12px] leading-snug text-paper/45">{m.label}</div>
+                  <div className={`display mt-2 text-3xl md:text-4xl ${i === 3 ? "text-gold" : "text-paper"}`}>
                     <Counter to={m.value} play={seen} delay={0.2 + i * 0.12} />
                   </div>
                 </div>
@@ -175,48 +176,53 @@ export function ControlCenter() {
 
             <div className="grid grid-cols-1 border-b border-paper/10 md:grid-cols-[1.6fr_1fr]">
               <div className="px-5 py-5">
-                <div className="label mb-3 flex justify-between text-[9px] text-paper/40">
-                  <span>风险指数 · 近 30 日</span>
-                  <span className="text-gold">— — 告警阈值</span>
+                <div className="label mb-3 flex flex-wrap justify-between gap-x-4 gap-y-1 text-[9px] text-paper/40">
+                  <span>{control.chart}</span>
+                  <span className="text-gold">{control.threshold}</span>
                 </div>
                 <div className="h-32">
                   <RiskChart on={seen} />
                 </div>
               </div>
               <div className="border-t border-paper/10 px-5 py-5 md:border-l md:border-t-0">
-                <div className="label mb-3 text-[9px] text-paper/40">供应商矩阵 · 48</div>
+                <div className="label mb-3 text-[9px] text-paper/40">{control.grid}</div>
                 <div className="h-32">
                   <SupplierGrid on={seen} />
                 </div>
               </div>
             </div>
 
-            <div className="min-h-[300px] px-5 py-5 font-mono text-[12px] leading-[2] md:text-[13px]">
+            <div className="px-4 py-5 font-mono text-[11.5px] leading-[1.9] md:px-5 md:text-[13px] md:leading-[2]">
               <div className="label mb-2 text-[9px] text-paper/35">Agent trace</div>
+              {/* Every line is laid out from the start (untyped ones invisible) so the console never changes height. */}
               {control.log.map((l, i) => {
-                if (i > line) return null;
                 const chars = Array.from(l.text);
-                const shown = i < line ? l.text : chars.slice(0, ch).join("");
+                const shown = i < line ? l.text : i === line ? chars.slice(0, ch).join("") : "";
                 return (
-                  <div key={i} className={`flex gap-3 ${l.tag === "HUMAN" ? "my-1 rounded-sm bg-gold/10 px-2 -mx-2" : ""}`}>
+                  <div
+                    key={i}
+                    className={`flex gap-3 ${i > line ? "invisible" : ""} ${l.tag === "HUMAN" ? "-mx-2 my-1 rounded-sm bg-gold/10 px-2" : ""}`}
+                  >
                     <span className="hidden text-paper/25 sm:inline">{l.t}</span>
                     <span className={`w-14 shrink-0 ${TAG_STYLE[l.tag]}`}>{l.tag}</span>
-                    <span className={l.tag === "CITE" ? "text-paper/45" : "text-paper/85"}>
-                      {shown}
-                      {i === line && <span className="caret ml-0.5 inline-block h-3.5 w-1.5 translate-y-0.5 bg-gold" />}
+                    <span className={`relative ${l.tag === "CITE" ? "text-paper/45" : "text-paper/85"}`}>
+                      <span className="invisible">{l.text}</span>
+                      <span className="absolute inset-0">
+                        {shown}
+                        {i === line && <span className="caret ml-0.5 inline-block h-3.5 w-1.5 translate-y-0.5 bg-gold" />}
+                      </span>
                     </span>
                   </div>
                 );
               })}
-              {line >= control.log.length && (
-                <div className="flex gap-3 text-paper/40">
-                  <span className="hidden text-paper/25 sm:inline">--:--:--</span>
-                  <span className="w-14 shrink-0 text-gold">DONE</span>
-                  <span>
-                    闭环完成 · 全程留痕可审计<span className="caret ml-1 inline-block h-3.5 w-1.5 translate-y-0.5 bg-gold" />
-                  </span>
-                </div>
-              )}
+              <div className={`flex gap-3 text-paper/40 ${line >= control.log.length ? "" : "invisible"}`}>
+                <span className="hidden text-paper/25 sm:inline">--:--:--</span>
+                <span className="w-14 shrink-0 text-gold">DONE</span>
+                <span>
+                  {control.done}
+                  <span className="caret ml-1 inline-block h-3.5 w-1.5 translate-y-0.5 bg-gold" />
+                </span>
+              </div>
             </div>
             <div className="pointer-events-none absolute inset-0 bg-[repeating-linear-gradient(0deg,rgba(255,255,255,.015)_0px,rgba(255,255,255,.015)_1px,transparent_1px,transparent_3px)]" />
           </div>

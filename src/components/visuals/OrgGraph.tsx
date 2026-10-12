@@ -2,6 +2,7 @@
 
 import { motion } from "motion/react";
 import { useEffect, useState } from "react";
+import { useContent } from "@/content/ContentProvider";
 
 const C = { x: 240, y: 240 };
 const NODES = [
@@ -31,6 +32,7 @@ const edge = (n: { x: number; y: number }) => {
  * island is connected, data pulses flow inward continuously.
  */
 export function OrgGraph({ active }: { active: boolean }) {
+  const { visuals } = useContent();
   const [step, setStep] = useState(-1);
 
   useEffect(() => {
@@ -129,7 +131,7 @@ export function OrgGraph({ active }: { active: boolean }) {
           ONTOLOGY
         </text>
         <text textAnchor="middle" dy="12" fontSize="9" fill="#FAF8F4" fillOpacity=".6">
-          业务对象
+          {visuals.ontology}
         </text>
       </g>
 

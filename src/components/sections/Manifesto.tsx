@@ -4,7 +4,7 @@ import { motion, useScroll, useTransform, type MotionValue } from "motion/react"
 import { useRef } from "react";
 import { DunePattern } from "@/components/brand/DunePattern";
 import { Reveal } from "@/components/fx/Reveal";
-import { manifesto } from "@/content/site";
+import { useContent } from "@/content/ContentProvider";
 
 function Char({ ch, progress, range }: { ch: string; progress: MotionValue<number>; range: [number, number] }) {
   const opacity = useTransform(progress, range, [0.12, 1]);
@@ -13,6 +13,7 @@ function Char({ ch, progress, range }: { ch: string; progress: MotionValue<numbe
 }
 
 export function Manifesto() {
+  const { manifesto } = useContent();
   const ref = useRef<HTMLParagraphElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start 0.85", "end 0.45"] });
   const chars = Array.from(manifesto.statement);
@@ -31,19 +32,22 @@ export function Manifesto() {
           </div>
           <p
             ref={ref}
-            className="text-balance col-span-12 text-[clamp(30px,4.4vw,68px)] font-medium leading-[1.3] tracking-[-0.03em] md:col-span-9"
+            className="text-balance col-span-12 text-[clamp(28px,4.4vw,68px)] font-medium leading-[1.3] tracking-[-0.03em] md:col-span-9 en:leading-[1.2]"
           >
-            {chars.map((c, i) =>
-              c === "\n" ? (
-                <br key={i} />
-              ) : (
-                <Char key={i} ch={c} progress={scrollYProgress} range={[i / n, Math.min(1, (i + 1.5) / n)]} />
-              ),
-            )}
+            <span className="sr-only">{manifesto.statement}</span>
+            <span aria-hidden="true">
+              {chars.map((c, i) =>
+                c === "\n" ? (
+                  <br key={i} />
+                ) : (
+                  <Char key={i} ch={c} progress={scrollYProgress} range={[i / n, Math.min(1, (i + 1.5) / n)]} />
+                ),
+              )}
+            </span>
           </p>
         </div>
 
-        <div className="mt-24 grid grid-cols-1 border-t border-ink/10 md:mt-36 md:grid-cols-3">
+        <div className="mt-20 grid grid-cols-1 border-t border-ink/10 md:mt-36 md:grid-cols-3">
           {manifesto.points.map((p, i) => (
             <Reveal
               key={p.k}

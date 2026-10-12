@@ -2,24 +2,16 @@
 
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useState } from "react";
-
-const STEPS = [
-  { k: "理解", en: "Understand", d: "解析任务意图与约束" },
-  { k: "读取", en: "Retrieve", d: "查询 SRM · WMS · 生产计划" },
-  { k: "判断", en: "Reason", d: "基于业务对象与规则推理" },
-  { k: "调用", en: "Tool Call", d: "库存测算 · 替代供应商检索" },
-  { k: "审批", en: "Human Gate", d: "关键动作交由负责人确认", human: true },
-  { k: "执行", en: "Execute", d: "生成采购任务 · 写回系统" },
-  { k: "回读", en: "Observe", d: "核对执行结果，进入下一轮" },
-];
+import { useContent } from "@/content/ContentProvider";
 
 const R = 168;
-const pos = (i: number) => {
-  const a = (i / STEPS.length) * Math.PI * 2 - Math.PI / 2;
+const pos = (i: number, count: number) => {
+  const a = (i / count) * Math.PI * 2 - Math.PI / 2;
   return { x: 240 + Math.cos(a) * R, y: 240 + Math.sin(a) * R, a };
 };
 
 export function AgentLoop({ active }: { active: boolean }) {
+  const STEPS = useContent().visuals.agentSteps;
   const [n, setN] = useState(0);
   useEffect(() => {
     if (!active) return;
@@ -63,7 +55,7 @@ export function AgentLoop({ active }: { active: boolean }) {
         </g>
 
         {STEPS.map((st, k) => {
-          const p = pos(k);
+          const p = pos(k, STEPS.length);
           const on = k === i;
           const lx = 240 + Math.cos(p.a) * (R + 34);
           const ly = 240 + Math.sin(p.a) * (R + 34);
@@ -107,10 +99,10 @@ export function AgentLoop({ active }: { active: boolean }) {
             transition={{ duration: 0.45 }}
           >
             <div className="label text-[9px] text-gold">
-              Step {String(i + 1).padStart(2, "0")} · {s.en}
+              Step {String(i + 1).padStart(2, "0")} · {s.alt}
             </div>
-            <div className="mt-2 text-3xl font-medium text-paper">{s.k}</div>
-            <div className="mx-auto mt-2 max-w-[150px] text-[11px] leading-relaxed text-paper/50">{s.d}</div>
+            <div className="mt-2 text-2xl font-medium text-paper md:text-3xl en:text-xl en:md:text-2xl">{s.k}</div>
+            <div className="mx-auto mt-2 max-w-[130px] text-[10.5px] leading-relaxed text-paper/50 md:max-w-[150px] md:text-[11px]">{s.d}</div>
           </motion.div>
         </AnimatePresence>
       </div>

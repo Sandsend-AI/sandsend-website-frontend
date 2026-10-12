@@ -1,12 +1,13 @@
 "use client";
 
-import { motion, useMotionValueEvent, useScroll, useTransform } from "motion/react";
+import { motion, useInView, useMotionValueEvent, useScroll, useTransform } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 import { Reveal } from "@/components/fx/Reveal";
 import { AgentLoop } from "@/components/visuals/AgentLoop";
 import { ModelViz } from "@/components/visuals/ModelViz";
 import { OrgGraph } from "@/components/visuals/OrgGraph";
-import { practices, type Practice } from "@/content/site";
+import type { Practice } from "@/content";
+import { useContent } from "@/content/ContentProvider";
 
 const VISUALS = { fde: OrgGraph, agents: AgentLoop, models: ModelViz } as const;
 
@@ -22,24 +23,24 @@ function useIsDesktop() {
   return d;
 }
 
-function Panel({ p, active }: { p: Practice; active: boolean }) {
+function Panel({ p, active, deliverables }: { p: Practice; active: boolean; deliverables: string }) {
   const Visual = VISUALS[p.id as keyof typeof VISUALS];
   return (
     <article className="relative flex w-full shrink-0 items-center lg:h-full lg:w-screen">
-      <div className="wrap grid grid-cols-12 items-center gap-x-8 gap-y-12 py-20 lg:py-0">
+      <div className="wrap grid grid-cols-12 items-center gap-x-8 gap-y-10 py-16 md:gap-y-12 md:py-20 lg:pb-4 lg:pt-28">
         <div className="col-span-12 lg:col-span-6 xl:col-span-5">
           <div className="flex items-baseline gap-5">
-            <span className="display text-[88px] leading-none text-transparent [-webkit-text-stroke:1px_rgba(194,162,107,.7)] md:text-[120px]">
+            <span className="display text-[72px] leading-none text-transparent [-webkit-text-stroke:1px_rgba(194,162,107,.7)] md:text-[120px]">
               {p.index}
             </span>
             <div>
-              <div className="label text-gold">{p.en}</div>
+              <div className="label text-gold">{p.alt}</div>
               <div className="mt-1 text-[13px] text-paper/50">{p.scope}</div>
             </div>
           </div>
-          <h3 className="mt-8 text-[clamp(40px,4.6vw,72px)] font-medium leading-[1.05] tracking-[-0.03em]">{p.name}</h3>
-          <p className="text-balance mt-6 text-xl leading-snug text-gold-soft/90 md:text-2xl">{p.lead}</p>
-          <p className="text-pretty mt-6 max-w-xl text-[15px] leading-[1.95] text-paper/60">{p.body}</p>
+          <h3 className="mt-6 text-[clamp(36px,4.6vw,72px)] font-medium leading-[1.05] tracking-[-0.03em] md:mt-8 en:text-[clamp(32px,3.6vw,56px)]">{p.name}</h3>
+          <p className="text-balance mt-5 text-lg leading-snug text-gold-soft/90 md:mt-6 md:text-2xl en:md:text-xl">{p.lead}</p>
+          <p className="text-pretty mt-5 max-w-xl text-[15px] leading-[1.95] text-paper/60 md:mt-6 en:leading-[1.75]">{p.body}</p>
           <div className="mt-8 flex flex-wrap gap-2">
             {p.tags.map((t) => (
               <span key={t} className="rounded-full border border-gold/30 px-3 py-1 text-[12px] text-gold/90">
@@ -62,7 +63,7 @@ function Panel({ p, active }: { p: Practice; active: boolean }) {
               <Visual active={active} />
             </div>
             <div>
-              <div className="label mb-4 text-paper/40">Deliverables</div>
+              <div className="label mb-4 text-paper/40">{deliverables}</div>
               <ul className="divide-y divide-paper/[0.08] border-y border-paper/[0.08]">
                 {p.deliverables.map((d, i) => (
                   <li key={d} className="group flex gap-4 py-3.5 text-[14px] leading-relaxed text-paper/80">
@@ -79,7 +80,19 @@ function Panel({ p, active }: { p: Practice; active: boolean }) {
   );
 }
 
+/** Stacked layout: each visual only animates while its panel is on screen. */
+function StackedPanel({ p, deliverables }: { p: Practice; deliverables: string }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const inView = useInView(ref, { margin: "-15% 0px -15% 0px" });
+  return (
+    <div ref={ref}>
+      <Panel p={p} active={inView} deliverables={deliverables} />
+    </div>
+  );
+}
+
 export function Practices() {
+  const { practices, practicesIntro } = useContent();
   const ref = useRef<HTMLDivElement>(null);
   const desktop = useIsDesktop();
   const [active, setActive] = useState(0);
@@ -96,27 +109,25 @@ export function Practices() {
 
   return (
     <section id="practices" className="relative bg-ink-deep">
-      <div className="wrap pb-6 pt-28 md:pt-40">
+      <div className="wrap pb-6 pt-24 md:pt-40">
         <div className="grid grid-cols-12 items-end gap-y-8">
           <div className="col-span-12 lg:col-span-7">
             <Reveal>
               <div className="label flex items-center gap-3 text-paper/50">
                 <span className="h-px w-8 bg-gold" />
-                Practices · 三大业务
+                {practicesIntro.label}
               </div>
             </Reveal>
             <Reveal delay={0.08}>
               <h2 className="h-section text-balance mt-8">
-                从战略到模型，
+                {practicesIntro.titleLines[0]}
                 <br />
-                一支团队交付到底
+                {practicesIntro.titleLines[1]}
               </h2>
             </Reveal>
           </div>
           <Reveal delay={0.16} className="col-span-12 lg:col-span-4 lg:col-start-9">
-            <p className="text-[15px] leading-[1.9] text-paper/60">
-              前线部署工程决定做什么、怎么落地；智能体系统让 AI 真正执行；模型工程把能力沉淀为企业自有的资产。三者可独立合作，也可组合成一次完整的 AI 化转型。
-            </p>
+            <p className="text-[15px] leading-[1.9] text-paper/60">{practicesIntro.lede}</p>
           </Reveal>
         </div>
       </div>
@@ -140,7 +151,7 @@ export function Practices() {
             </div>
             <motion.div className="flex h-full" style={{ x }}>
               {practices.map((p, i) => (
-                <Panel key={p.id} p={p} active={i === active} />
+                <Panel key={p.id} p={p} active={i === active} deliverables={practicesIntro.deliverables} />
               ))}
             </motion.div>
           </div>
@@ -148,7 +159,7 @@ export function Practices() {
       ) : (
         <div ref={ref} className="divide-y divide-paper/10 border-t border-paper/10">
           {practices.map((p) => (
-            <Panel key={p.id} p={p} active />
+            <StackedPanel key={p.id} p={p} deliverables={practicesIntro.deliverables} />
           ))}
         </div>
       )}

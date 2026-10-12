@@ -177,7 +177,12 @@ export function DuneField({ className }: { className?: string }) {
       target.y = (r.bottom - e.clientY) * dpr;
       target.on = 1;
     };
+    const onUp = (e: PointerEvent) => {
+      if (e.pointerType !== "mouse") target.on = 0;
+    };
     addEventListener("pointermove", onMove, { passive: true });
+    addEventListener("pointerup", onUp, { passive: true });
+    addEventListener("pointercancel", onUp, { passive: true });
 
     let visible = true;
     const io = new IntersectionObserver(([en]) => (visible = en.isIntersecting));
@@ -223,6 +228,8 @@ export function DuneField({ className }: { className?: string }) {
       ro.disconnect();
       io.disconnect();
       removeEventListener("pointermove", onMove);
+      removeEventListener("pointerup", onUp);
+      removeEventListener("pointercancel", onUp);
       gl.deleteBuffer(buf);
       gl.deleteProgram(prog);
       gl.deleteShader(vs);
