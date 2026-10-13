@@ -13,7 +13,7 @@ export const zh = {
     template: "%s · 沙尘彼岸 Sandsend",
     ogTitle: "沙尘彼岸 Sandsend · 沙尽之处，AI 抵岸。",
     description:
-      "沙尘彼岸 Sandsend 是一家企业 AI 工程公司：以前线部署工程推动企业 AI 化转型，以轻量化架构构建 AI Agent 系统，并为企业私有化部署、微调模型与组织训练数据。",
+      "沙尘彼岸 Sandsend 是一家总部位于上海的企业 AI 工程公司：以前线部署工程推动企业 AI 化转型，以轻量化架构构建 AI Agent 系统，并为企业私有化部署、微调模型与组织训练数据。",
     keywords: ["企业 AI", "AI 转型", "前线部署工程", "FDE", "AI Agent", "智能体", "私有化部署", "模型微调", "训练数据", "Sandsend", "沙尘彼岸"],
   },
 
@@ -270,6 +270,7 @@ export const zh = {
     practices: "业务",
     nav: "导航",
     contact: "联系",
+    hq: "总部 · 上海",
     legal: "沙尘彼岸 Sandsend · 风纱控股 Stormveil 旗下运营公司",
   },
 };

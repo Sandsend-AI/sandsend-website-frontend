@@ -46,6 +46,11 @@ export function buildJsonLd(locale: Locale) {
         url: site.url,
         logo: new URL("/brand/sandsend-logo@2x.png", site.url).href,
         email: site.email,
+        address: {
+          "@type": "PostalAddress",
+          addressLocality: locale === "zh" ? site.hq.city : site.hq.cityEn,
+          addressCountry: site.hq.country,
+        },
         description: t.meta.description,
         slogan: t.meta.ogTitle.split(" · ").pop(),
         knowsAbout: t.meta.keywords.filter((k) => k !== site.name && k !== site.nameEn),

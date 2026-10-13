@@ -11,7 +11,7 @@ export const en: Content = {
     template: "%s · Sandsend",
     ogTitle: "Sandsend · Where the sands end, AI lands.",
     description:
-      "Sandsend is an enterprise AI engineering company. We drive AI transformation through forward deployed engineering, build AI agent systems on a lightweight architecture, and deploy, fine-tune and curate training data for private enterprise models.",
+      "Sandsend is a Shanghai-based enterprise AI engineering company. We drive AI transformation through forward deployed engineering, build AI agent systems on a lightweight architecture, and deploy, fine-tune and curate training data for private enterprise models.",
     keywords: ["enterprise AI", "AI transformation", "forward deployed engineering", "FDE", "AI agents", "private deployment", "fine-tuning", "training data", "Sandsend"],
   },
 
@@ -268,6 +268,7 @@ export const en: Content = {
     practices: "Practices",
     nav: "Navigate",
     contact: "Contact",
+    hq: "HQ · Shanghai",
     legal: "Sandsend · An operating company of Stormveil",
   },
 };
