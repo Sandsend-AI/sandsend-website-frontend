@@ -24,7 +24,7 @@ export const zh = {
     homeLabel: "沙尘彼岸 首页",
     openMenu: "打开菜单",
     closeMenu: "关闭菜单",
-    lang: { href: "/en", hrefLang: "en", label: "EN", aria: "Switch to English" },
+    lang: { href: "/en", hrefLang: "en", locale: "en" as "zh" | "en", label: "EN", aria: "Switch to English" },
   },
 
   nav: [

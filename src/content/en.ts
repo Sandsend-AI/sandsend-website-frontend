@@ -22,7 +22,7 @@ export const en: Content = {
     homeLabel: "Sandsend home",
     openMenu: "Open menu",
     closeMenu: "Close menu",
-    lang: { href: "/", hrefLang: "zh-CN", label: "中文", aria: "切换到中文" },
+    lang: { href: "/", hrefLang: "zh-CN", locale: "zh", label: "中文", aria: "切换到中文" },
   },
 
   nav: [
