@@ -1,13 +1,19 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { LATIN } from "@/components/brand/paths";
 import { Mark } from "@/components/brand/Logo";
 import { useContent } from "@/content/ContentProvider";
+import { rememberLocale } from "@/content/locale";
 import { site } from "@/content/site";
+
+/** Inlined at build so server HTML and hydration agree; the effect then catches up after New Year. */
+const BUILD_YEAR = Number(process.env.BUILD_YEAR);
 
 export function Footer() {
   const t = useContent();
-  const year = new Date().getFullYear();
+  const [year, setYear] = useState(BUILD_YEAR);
+  useEffect(() => setYear(new Date().getFullYear()), []);
   return (
     <footer className="relative overflow-hidden border-t border-paper/10 bg-ink-deep pt-16 md:pt-20">
       <div className="wrap">
@@ -51,7 +57,7 @@ export function Footer() {
             <a href={`mailto:${site.email}`} className="break-all font-mono text-[13px] text-paper/70 transition-colors hover:text-gold">
               {site.email}
             </a>
-            <a href={t.ui.lang.href} hrefLang={t.ui.lang.hrefLang} className="label mt-4 block text-[10px] text-paper/40 transition-colors hover:text-gold">
+            <a href={t.ui.lang.href} hrefLang={t.ui.lang.hrefLang} onClick={() => rememberLocale(t.ui.lang.locale)} className="label mt-4 block text-[10px] text-paper/40 transition-colors hover:text-gold">
               {t.ui.lang.aria} →
             </a>
           </div>

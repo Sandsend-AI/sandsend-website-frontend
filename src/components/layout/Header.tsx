@@ -4,6 +4,7 @@ import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useState } from "react";
 import { Logo } from "@/components/brand/Logo";
 import { useContent } from "@/content/ContentProvider";
+import { rememberLocale } from "@/content/locale";
 
 export function Header() {
   const t = useContent();
@@ -98,6 +99,7 @@ export function Header() {
             <a
               href={t.ui.lang.href}
               hrefLang={t.ui.lang.hrefLang}
+              onClick={() => rememberLocale(t.ui.lang.locale)}
               aria-label={t.ui.lang.aria}
               className={`label flex h-10 items-center rounded-full px-3 text-[11px] transition-colors duration-500 ${
                 tone ? "text-ink/60 hover:text-ink" : "text-paper/60 hover:text-gold"

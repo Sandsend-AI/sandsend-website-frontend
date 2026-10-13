@@ -8,24 +8,32 @@ import { CtaButton } from "@/components/fx/Magnetic";
 import { LineReveal, Scramble } from "@/components/fx/Reveal";
 import { useContent } from "@/content/ContentProvider";
 
+const pad = (n: number) => String(n).padStart(2, "0");
+
+/** e.g. "UTC+08:00", "UTC-05:00", "UTC+05:30" for the visitor's current zone (DST-aware). */
+function utcOffset(d: Date) {
+  const m = -d.getTimezoneOffset();
+  const abs = Math.abs(m);
+  return `UTC${m < 0 ? "-" : "+"}${pad(Math.floor(abs / 60))}:${pad(abs % 60)}`;
+}
+
 function Clock() {
-  const [t, setT] = useState("--:--:--");
+  const [t, setT] = useState({ zone: "UTC", time: "--:--:--" });
   useEffect(() => {
-    const f = () =>
-      setT(
-        new Intl.DateTimeFormat("en-GB", {
-          timeZone: "Asia/Shanghai",
-          hour: "2-digit",
-          minute: "2-digit",
-          second: "2-digit",
-          hour12: false,
-        }).format(new Date()),
-      );
+    // Read the time from the same Date as the offset; a cached Intl formatter would pin the zone at mount.
+    const f = () => {
+      const now = new Date();
+      setT({ zone: utcOffset(now), time: `${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}` });
+    };
     f();
     const id = setInterval(f, 1000);
     return () => clearInterval(id);
   }, []);
-  return <span className="tabular-nums">{t}</span>;
+  return (
+    <>
+      {t.zone} · <span className="tabular-nums">{t.time}</span>
+    </>
+  );
 }
 
 export function Hero() {
@@ -58,7 +66,7 @@ export function Hero() {
           </div>
           <div className="hidden space-y-1.5 text-right md:block">
             <div>
-              UTC+08:00 · <Clock />
+              <Clock />
             </div>
             <div className="flex items-center justify-end gap-2">
               <span className="h-1.5 w-1.5 rounded-full bg-gold shadow-[0_0_10px_2px_rgba(194,162,107,.6)]" />
