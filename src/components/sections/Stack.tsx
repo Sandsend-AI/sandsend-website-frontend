@@ -95,18 +95,19 @@ export function Stack() {
         </div>
 
         <div className="col-span-12 flex items-center justify-center lg:col-span-7">
-          <div className="relative h-[460px] w-full max-w-[640px] [perspective:2400px] md:h-[720px]">
-            <motion.div
-              className="absolute left-1/2 top-[68%] h-0 w-0 [transform-style:preserve-3d] md:top-[62%]"
-              style={{ rotateX: 58, rotateZ: spin }}
-            >
+          <div className="relative h-[460px] w-full max-w-[640px] md:h-[720px]">
+            {/* Plates are flat siblings painted in DOM order, each carrying its own
+                perspective, rather than children of one preserve-3d context: iOS
+                WebKit mis-sorts the depth of backdrop-filtered layers in a 3D
+                context and draws L1 over the plates above it. */}
+            <div className="absolute left-1/2 top-[68%] h-0 w-0 md:top-[62%]">
               {stack.layers.map((l, i) => {
                 const on = lit.has(i);
                 return (
-                  <Plate key={l.code} i={i} gap={gap} on={on} dim={anyLit && !on} code={l.code} alt={l.alt} name={l.name} onHover={setHover} />
+                  <Plate key={l.code} i={i} gap={gap} spin={spin} on={on} dim={anyLit && !on} code={l.code} alt={l.alt} name={l.name} onHover={setHover} />
                 );
               })}
-            </motion.div>
+            </div>
             <div className="label absolute bottom-0 left-0 text-[9px] text-paper/30">FIG. 04 — Sandsend operating stack, exploded view</div>
           </div>
         </div>
@@ -115,9 +116,14 @@ export function Stack() {
   );
 }
 
+// Vertical offset from the plates' pivot up to the centre of the figure, where
+// the shared perspective origin used to sit (~18% of 460px, ~12% of 720px).
+const VANISH = 84;
+
 function Plate({
   i,
   gap,
+  spin,
   on,
   dim,
   code,
@@ -127,6 +133,7 @@ function Plate({
 }: {
   i: number;
   gap: MotionValue<number>;
+  spin: MotionValue<number>;
   on: boolean;
   dim: boolean;
   code: string;
@@ -134,12 +141,16 @@ function Plate({
   name: string;
   onHover: (i: number | null) => void;
 }) {
-  const z = useTransform(gap, (g) => i * g * 1.6);
+  const transform = useTransform(
+    () =>
+      `translateY(-${VANISH}px) perspective(2400px) translateY(${VANISH}px) ` +
+      `rotateX(58deg) rotateZ(${spin.get()}deg) translateZ(${i * gap.get() * 1.6}px)`,
+  );
   const size = "min(64vw, 340px)";
   return (
     <motion.div
-      className="absolute [transform-style:preserve-3d]"
-      style={{ z, width: size, height: size, left: `calc(${size} / -2)`, top: `calc(${size} / -2)` }}
+      className="absolute"
+      style={{ transform, width: size, height: size, left: `calc(${size} / -2)`, top: `calc(${size} / -2)` }}
       onPointerEnter={() => onHover(i)}
       onPointerLeave={() => onHover(null)}
     >
