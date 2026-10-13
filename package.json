@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "og:fonts": "node scripts/og-fonts.mjs"
   },
   "dependencies": {
     "lenis": "^1.3.26",

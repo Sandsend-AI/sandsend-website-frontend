@@ -2,7 +2,7 @@ import { Inter, JetBrains_Mono, Jost, Noto_Sans_SC } from "next/font/google";
 import { Cursor } from "@/components/fx/Cursor";
 import { Preloader } from "@/components/fx/Preloader";
 import { SmoothScroll } from "@/components/fx/SmoothScroll";
-import { content, type Locale } from "@/content";
+import { buildJsonLd, content, type Locale } from "@/content";
 import { ContentProvider } from "@/content/ContentProvider";
 import "@/app/globals.css";
 
@@ -24,6 +24,10 @@ export function Document({ locale, children }: { locale: Locale; children: React
     >
       <head>
         <script dangerouslySetInnerHTML={{ __html: introScript }} />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(buildJsonLd(locale)).replace(/</g, "\\u003c") }}
+        />
       </head>
       <body>
         <ContentProvider value={t}>
