@@ -13,10 +13,16 @@ export function Header() {
   const [light, setLight] = useState(false);
 
   useEffect(() => {
+    // Hide/show only after a sustained run in one direction: slow touch drags
+    // and iOS rubber-banding jitter by a few px both ways on every frame.
+    const THRESHOLD = 24;
     let last = scrollY;
+    let anchor = scrollY;
+    let dir = 0;
     const lightSections = document.querySelectorAll<HTMLElement>('[data-theme="light"]');
     const on = () => {
-      const y = scrollY;
+      const max = document.documentElement.scrollHeight - innerHeight;
+      const y = Math.min(Math.max(scrollY, 0), max);
       setScrolled(y > 40);
       setLight(
         [...lightSections].some((el) => {
@@ -24,8 +30,14 @@ export function Header() {
           return r.top <= 36 && r.bottom >= 36;
         }),
       );
-      setHidden(y > 400 && y > last + 2);
-      if (y < last - 2) setHidden(false);
+      const d = Math.sign(y - last);
+      if (d !== 0 && d !== dir) {
+        dir = d;
+        anchor = last;
+      }
+      if (y <= 400) setHidden(false);
+      else if (dir > 0 && y - anchor > THRESHOLD) setHidden(true);
+      else if (dir < 0 && anchor - y > THRESHOLD) setHidden(false);
       last = y;
     };
     on();
@@ -56,7 +68,7 @@ export function Header() {
   return (
     <>
       <header
-        className={`fixed inset-x-0 top-0 z-50 transition-[transform,background-color,border-color] duration-700 ease-[var(--ease-out-expo)] ${
+        className={`fixed inset-x-0 top-0 z-50 transition-[translate,background-color,border-color] duration-700 ease-[var(--ease-out-expo)] ${
           hidden && !open ? "-translate-y-full" : "translate-y-0"
         } ${
           scrolled && !open
