@@ -30,3 +30,40 @@ export function buildMetadata(locale: Locale): Metadata {
     twitter: { card: "summary_large_image" },
   };
 }
+
+/** schema.org Organization + WebSite graph for the locale's home page. */
+export function buildJsonLd(locale: Locale) {
+  const t = content[locale];
+  const orgId = new URL("/#organization", site.url).href;
+  return {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Organization",
+        "@id": orgId,
+        name: locale === "zh" ? site.name : site.nameEn,
+        alternateName: locale === "zh" ? site.nameEn : site.name,
+        url: site.url,
+        logo: new URL("/brand/sandsend-logo@2x.png", site.url).href,
+        email: site.email,
+        address: {
+          "@type": "PostalAddress",
+          addressLocality: locale === "zh" ? site.hq.city : site.hq.cityEn,
+          addressCountry: site.hq.country,
+        },
+        description: t.meta.description,
+        slogan: t.meta.ogTitle.split(" · ").pop(),
+        knowsAbout: t.meta.keywords.filter((k) => k !== site.name && k !== site.nameEn),
+        contactPoint: { "@type": "ContactPoint", contactType: "sales", email: site.email, availableLanguage: ["zh-CN", "en"] },
+      },
+      {
+        "@type": "WebSite",
+        "@id": new URL(`${t.home === "/" ? "" : t.home}/#website`, site.url).href,
+        name: `${site.name} ${site.nameEn}`,
+        url: new URL(t.home, site.url).href,
+        inLanguage: t.htmlLang,
+        publisher: { "@id": orgId },
+      },
+    ],
+  };
+}

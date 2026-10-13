@@ -57,6 +57,7 @@ export function Footer() {
             <a href={`mailto:${site.email}`} className="break-all font-mono text-[13px] text-paper/70 transition-colors hover:text-gold">
               {site.email}
             </a>
+            <div className="mt-3 text-[13px] text-paper/50">{t.footer.hq}</div>
             <a href={t.ui.lang.href} hrefLang={t.ui.lang.hrefLang} onClick={() => rememberLocale(t.ui.lang.locale)} className="label mt-4 block text-[10px] text-paper/40 transition-colors hover:text-gold">
               {t.ui.lang.aria} →
             </a>

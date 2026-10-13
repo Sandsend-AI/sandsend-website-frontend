@@ -3,6 +3,7 @@ export const site = {
   nameEn: "Sandsend",
   url: "https://sandsend.ai",
   email: "haven@sandsend.ai",
+  hq: { city: "上海", cityEn: "Shanghai", country: "CN" },
   icp: "",
 };
 
